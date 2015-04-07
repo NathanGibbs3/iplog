@@ -106,14 +106,14 @@ void *get_ident_data(void *data) {
 		if (opt_enabled(LOG_DEST)) {
 			u_char lbuf2[MAX_HSTLEN];
 
-			mysyslog("TCP: %s connection attempt to %s from %s@%s:%u",
-				serv_lookup(tcp->th_dport, "tcp", sbuf, sizeof(sbuf)), 
+			mysyslog("TCP: %s:%s from %s@%s:%u",
 				host_lookup(&ip->ip_dst, tcp_res(), lbuf2, sizeof(lbuf2)),
+				serv_lookup(tcp->th_dport, "tcp", sbuf, sizeof(sbuf)), 
 				remote_user,
 				host_lookup(&ip->ip_src, tcp_res(), lbuf, sizeof(lbuf)),
 				ntohs(tcp->th_sport));
 		} else {
-			mysyslog("TCP: %s connection attempt from %s@%s:%u",
+			mysyslog("TCP: to %s from %s@%s:%u",
 				serv_lookup(tcp->th_dport, "tcp", sbuf, sizeof(sbuf)), remote_user,
 				host_lookup(&ip->ip_src, tcp_res(), lbuf, sizeof(lbuf)),
 				ntohs(tcp->th_sport));
@@ -129,13 +129,13 @@ ident_fail:
 	if (opt_enabled(LOG_DEST)) {
 		u_char lbuf2[MAX_HSTLEN];
 
-		mysyslog("TCP: %s connection attempt to %s from %s:%u",
-			serv_lookup(tcp->th_dport, "tcp", sbuf, sizeof(sbuf)),
+		mysyslog("TCP: to %s:%s from %s:%u",
 			host_lookup(&ip->ip_dst, tcp_res(), lbuf2, sizeof(lbuf2)),
+			serv_lookup(tcp->th_dport, "tcp", sbuf, sizeof(sbuf)),
 			host_lookup(&ip->ip_src, tcp_res(), lbuf, sizeof(lbuf)),
 			ntohs(tcp->th_sport));
 	} else {
-		mysyslog("TCP: %s connection attempt from %s:%u",
+		mysyslog("TCP: to %s from %s:%u",
 			serv_lookup(tcp->th_dport, "tcp", sbuf, sizeof(sbuf)),
 			host_lookup(&ip->ip_src, tcp_res(), lbuf, sizeof(lbuf)),
 			ntohs(tcp->th_sport));

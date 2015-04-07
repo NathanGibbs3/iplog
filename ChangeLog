@@ -1,6 +1,11 @@
+11-05-2014
+	Released as version 2.2.5
+	TCP & UDP Log message cleanup & standardization.
+	Debian init script fix.
+
 06-17-2013
 	Released as version 2.2.4
-	Some code tweaks to get it to compile on debian Wheezy.
+	Some code tweaks to get it to compile on Debian Wheezy.
 	Added debian startup script
 
 05-16-2013

@@ -1,3 +1,8 @@
+CHANGES IN IPLOG 2.2.5
+----------------------
+* TCP & UDP Log message cleanup & standardization.
+* Debian init script fix.
+
 CHANGES IN IPLOG 2.2.4
 ----------------------
 * Code tweaks to allow compilation on debian wheezy.

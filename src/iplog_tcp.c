@@ -270,10 +270,10 @@ int tcp_parser(const struct ip *ip) {
 
 				host_lookup(&ip->ip_dst, tcp_res(), lbuf2, sizeof(lbuf2));
 
-				mysyslog("TCP: %s connection attempt to %s from %s:%u",
-					sbuf, lbuf2, lbuf, ntohs(tcp->th_sport));
+				mysyslog("TCP: to %s:%s from %s:%u",
+					lbuf2, sbuf, lbuf, ntohs(tcp->th_sport));
 			} else {
-				mysyslog("TCP: %s connection attempt from %s:%u",
+				mysyslog("TCP: to %s from %s:%u",
 					sbuf, lbuf, ntohs(tcp->th_sport));
 			}
 		}

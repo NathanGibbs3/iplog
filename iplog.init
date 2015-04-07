@@ -20,7 +20,7 @@ DESC="IP Logging Service"
 NAME=iplog
 DAEMON=/usr/local/sbin/$NAME
 DAEMON_ARGS=""
-PIDFILE=/var/run/$NAME.pid
+PIDFILE=/var/run/iplog/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
 # Exit if the package is not installed
@@ -99,8 +99,18 @@ do_reload() {
 	return 0
 }
 
+setup_run_dir() {
+	# Create the PrivSep empty dir if necessary
+	if [ ! -d /var/run/iplog ]; then
+		mkdir /var/run/iplog
+		chown nobody:nogroup /var/run/iplog
+		chmod 0755 /var/run/iplog
+	fi
+}
+
 case "$1" in
   start)
+	setup_run_dir
 	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
 	do_start
 	case "$?" in

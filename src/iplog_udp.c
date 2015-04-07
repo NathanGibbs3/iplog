@@ -118,11 +118,11 @@ int udp_parser(const struct ip *ip) {
 		u_char buf2[MAX_HSTLEN];
 
 		host_lookup(&ip->ip_dst, udp_res(), buf2, sizeof(buf2));
-		mysyslog("UDP: dgram to %s:%s from %s:%u (%lu data bytes)",
+		mysyslog("UDP: to %s:%s from %s:%u (%lu data bytes)",
 			buf2, sbuf, buf, ntohs(udp->uh_sport),
 			ntohs(udp->uh_ulen) - sizeof(*udp));
 	} else {
-		mysyslog("UDP: dgram to %s from %s:%u (%lu data bytes)",
+		mysyslog("UDP: to %s from %s:%u (%lu data bytes)",
 			sbuf, buf, ntohs(udp->uh_sport),
 			ntohs(udp->uh_ulen) - sizeof(*udp));
 	}
