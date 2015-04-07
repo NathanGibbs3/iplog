@@ -1,0 +1,416 @@
+.\" $Id: iplog.8,v 1.25 2001/01/02 23:07:44 odin Exp $
+.TH iplog 8 "03 December 2000" "iplog 2.2.3"
+
+.SH NAME
+iplog \- TCP/IP traffic logger.
+
+.SH SYNOPSIS
+.BI "iplog [options]"
+.sp
+.B "[\-DFILNPRSTUVbcdefhkmnopqstvwxyz]"
+.br
+.B "[\-a <network,network2,...>]"
+.br
+.B "[\-g <group>]"
+.br
+.B "[\-i <interface1,...,interfaceN>]"
+.br
+.B "[\-l <logfile>]"
+.br
+.B "[\-\-pid\-file=<file>]"
+.br
+.B "[\-u <user>]"
+.br
+.B "[\-\-tcp[=argument]]"
+.br
+.B "[\-\-udp[=argument]]"
+.br
+.B "[\-\-icmp[=argument]]"
+.br
+.B "[\-\-facility=syslog facility]"
+.br
+.B "[\-\-priority=syslog priority]"
+
+.SH DESCRIPTION
+.B iplog
+is a TCP/IP traffic logger. Currently, it is capable of logging
+TCP, UDP and ICMP traffic. Adding support for other protocols
+should be relatively easy.
+.B iplog's
+capabilities include the ability to detect TCP port scans, TCP null scans,
+FIN scans, UDP and ICMP "smurf" attacks,
+bogus TCP flags (used by scanners to detect the operating system in use),
+TCP SYN scans, TCP "Xmas" scans, ICMP ping floods, UDP scans, and IP
+fragment attacks.
+.B iplog
+is able to run in promiscuous mode and monitor traffic to all hosts
+on a network.
+.B iplog
+uses libpcap to read data from the network and can be ported
+to any system that supports pthreads and on which libpcap will function.
+
+
+.SH NOTATION
+Throughout this document, required parameters will be denoted by enclosing the parameter in angle brackets <like this>.
+
+Optional parameters will be denoted by enclosing the parameter in square brackets [like this].
+
+The '|' character is used to express exclusive or.  For example [true|false] means you may give "true" or "false", but not both.
+
+.SH OPTIONS
+.TP
+
+.B "\-\-tcp=true (default)"
+Log TCP traffic.
+
+.TP
+.B "\-\-tcp=false"
+Do not log TCP traffic.
+
+.TP
+.B "\-\-udp=true (default)"
+Log UDP traffic.
+
+.TP
+.B "\-\-udp=false"
+Do not log UDP traffic.
+
+.TP
+.B "\-\-icmp=true (default)"
+Log ICMP traffic.
+
+.TP
+.B "\-\-icmp=false"
+Do not log ICMP traffic.
+
+.TP
+.B "\-\-facility=syslog facility"
+Use the specified facility for openlog(3).
+
+.TP
+.B "\-\-priority=syslog priority"
+Use the specified priority for syslog(3).
+
+.TP
+.B "\-D, \-\-log\-dest=true"
+Log the destination address of IP packets.
+
+.TP
+.B "\-\-log\-dest=false (default)"
+Do not log the destination address of IP packets.
+
+.TP
+.B "\-F, \-\-detect\-udp\-scan=true (default)"
+Detect and log UDP scans.
+
+.TP
+.B "\-\-detect\-udp\-scan=false"
+Neither detect nor log UDP scans.
+
+.TP
+.B "\-\-log\-udp\-scan"
+Same as \-\-detect\-udp\-scan.
+
+.TP
+.B "\-I, \-\-icmp\-resolve=true (default)"
+Perform host name resolution for ICMP traffic.
+
+.TP
+.B "\-L, \-\-stdout"
+Log to stdout.
+
+.TP
+.B "\-\-icmp\-resolve=false"
+Do not perform host name resolution for ICMP traffic.
+
+.TP
+.B "\-N, \-\-disable\-resolver"
+Do not perform host name resolution for any traffic.
+
+.TP
+.B "\-P, \-\-detect\-ping\-flood=true (default)"
+Detect ping (ICMP echo) flood attacks.
+
+.TP
+.B "\-\-detect\-ping\-flood=false"
+Do not detect ping flood attacks.
+
+.TP
+.B "\-\-log\-ping\-flood"
+Same as \-\-detect\-ping\-flood.
+
+.TP
+.B "\-R, \-\-restart"
+Restart
+.B iplog,
+if it is running.
+
+.TP
+.B "\-S, \-\-detect\-smurf=true (default)"
+Detect "smurf" attacks.
+
+.TP
+.B "\-\-detect\-smurf=false"
+Do not detect "smurf" attacks.
+
+.TP
+.B "\-\-log\-smurf"
+Same as \-\-detect\-smurf.
+
+.TP
+.B "\-T, \-\-tcp\-resolve=true (default)"
+Perform host name resolution for TCP traffic.
+
+.TP
+.B "\-\-tcp\-resolve=false"
+Do not perform host name resolution for TCP traffic.
+
+.TP
+.B "\-U, \-\-udp\-resolve=true (default)"
+Perform host name resolution for UDP traffic.
+
+.TP
+.B "\-\-udp\-resolve=false"
+Do not perform host name resolution for UDP traffic.
+
+.TP
+.B "\-V, \-\-verbose=true"
+Verbose - Log packets with a bad checksum and packets with a short header length.
+
+.TP
+.B "\-\-verbose=false (default)"
+Do not be verbose.
+
+.TP
+.B "\-a <network,network2,...>, \-\-promisc=<network,network2,...>"
+Put all monitored interfaces into promiscuous mode and log traffic destined to all hosts on the specified network(s).
+
+.TP
+.B "\-b, \-\-detect\-bogus=true (default)"
+Detect bogus TCP flags.  Programs such as nmap and queso may set these flags while trying to perform OS detection.
+
+.TP
+.B "\-\-detect\-bogus=false"
+Do not detect bogus TCP flags.
+
+.TP
+.B "\-\-log\-bogus"
+Same as \-\-detect\-bogus.
+
+.TP
+.B "\-c, \-\-dns\-cache=true (default)"
+Use a built-in DNS cache (allows host lookups to be faster).
+
+.TP
+.B "\-\-dns\-cache=false"
+Do not use the built-in DNS cache.
+
+.TP
+.B "\-d, \-\-ignore"
+Ignore DNS traffic from hosts listed in
+.B /etc/resolv.conf.
+
+.TP
+.B "\-e, \-\-get\-ident=true"
+Perform ident (RFC 1413) lookups on connections destined to a listening port.  This is only available on Linux.
+
+.TP
+.B "\-\-get\-ident=false (default)"
+Do not perform ident lookups.
+
+.TP
+.B "\-f, \-\-detect\-fin\-scan=true (default)"
+Detect TCP FIN scans (a "stealth scan" used by nmap and other scanners).
+
+.TP
+.B "\-\-detect\-fin\-scan=false"
+Do not detect TCP FIN scans.
+
+.TP
+.B "\-\-log\-fin\-scan"
+Same as \-\-detect\-fin\-scan.
+
+.TP
+.B "\-q, \-\-detect\-syn\-scan=true (default)"
+Detect TCP SYN scans (a "stealth scan" used by nmap and other scanners).
+
+.TP
+.B "\-\-detect\-syn\-scan=false"
+Do not detect TCP SYN scans.
+
+.TP
+.B "\-\-log\-syn\-scan"
+Same as \-\-detect\-syn\-scan.
+
+
+.TP
+.B "\-g <group|GID>, \-\-group=<group|GID>"
+Run with the specified group or GID.
+
+.TP
+.B "\-h, \-\-help"
+Print a summary of available options and exit.
+
+.TP
+.B "\-i <interface(s)>, \-\-interface=<interface(s)>"
+Listen on only the specified interfaces.  This option takes a comma-delimited list of interfaces.  By default,
+.B iplog
+will listen on any interfaces that are up, except loopback.
+
+.TP
+.B "\-k, \-\-kill"
+Kill
+.B iplog,
+if it is running.
+
+.TP
+.B "\-l <logfile>, \-\-logfile=<logfile>"
+Log to the specified file instead of logging via
+.BR syslog (3)
+
+.TP
+.B "\-\-pid\-file=<file>"
+Use <file> as the pid file.
+.br
+
+This option should be used when starting
+.B iplog
+as a user who doesn't have write access to /var/run.
+.br
+
+This option must be used with the -k and -R options when an instance of
+.B iplog
+is running that was started with the \-\-pid\-file option.  Also note the
+\-\-pid\-file option must be given before the \-k and \-R options.
+
+.TP
+.B "\-m, \-\-scans\-only=true"
+Only log scans and floods.  Do not log other traffic.
+
+.TP
+.B "\-n, \-\-detect\-null\-scan=true (default)"
+Detect null scans (a "stealth scan" used by nmap and other scanners).
+
+.TP
+.B "\-\-detect\-null\-scan=false"
+Do not detect null scans.
+
+.TP
+.B "\-\-log\-null\-scan"
+Same as \-\-detect\-null\-scan.
+
+.TP
+.B "\-o, \-\-no\-fork"
+Run in the foreground.
+
+.TP
+.B "\-p, \-\-detect\-portscan=true (default)"
+Detect port scans (connect(2) scans and SYN (half open) scans).
+
+.TP
+.B "\-\-detect\-portscan=false"
+Do not detect port scans.
+
+.TP
+.B "\-\-log\-portscan"
+Same as \-\-detect\-portscan.
+
+.TP
+.B "\-s, \-\-detect\-syn\-flood=true (default)"
+Stop resolving IP addresses (until the flood ends) if a SYN flood is detected.
+
+.TP
+.B "\-\-detect\-syn\-flood=false"
+Do not stop resolving IP addresses if a SYN flood is detected.
+
+.TP
+.B "\-t, \-\-detect\-traceroute=true (default)"
+Detect (and log) traceroute.
+
+.TP
+.B "\-\-detect\-traceroute=false"
+Do not detect traceroute.
+
+.TP
+.B "\-\-log\-traceroute"
+Same as \-\-detect\-traceroute.
+
+.TP
+.B "\-u <user|UID>, \-\-user=<user|UID>"
+Run as the user or with the UID specified.
+
+.TP
+.B "\-v, \-\-version"
+Print version information and exit.
+
+.TP
+.B "\-w, \-\-log-ip"
+Log the IP addresses as well as the hostnames of hosts that are looked up.
+
+.TP
+.B "\-x, \-\-detect\-xmas\-scan=true (default)"
+Detect Xmas scans (a "stealth" scan used by nmap and other scanners).
+
+.TP
+.B "\-\-detect-xmas-scan=false"
+Do not detect Xmas scans.
+
+.TP
+.B "\-\-log\-xmas\-scan"
+Same as \-\-detect\-xmas\-scan.
+
+.TP
+.B "\-y, \-\-detect\-frag=true"
+Detect fragment attacks.
+
+.TP
+.B "\-\-detect\-frag=false"
+Do not detect fragment attacks.
+
+.TP
+.B "\-\-log\-frag"
+Same as \-\-detect\-frag.
+
+.TP
+.B "\-z, \-\-fool\-nmap=true"
+Attempt to fool programs, such as nmap and queso, that perform remote OS detection.  As a side effect, this option will also cause most of nmap's "stealth" scans to fail.
+.TP
+.B WARNING
+This option is dangerous and can set off network traffic storms.
+
+.TP
+.B "\-\-fool\-nmap=false (default)"
+Do not attempt to fool nmap's OS detection.
+
+.SH FILES
+.TP
+.B /etc/iplog.conf
+The
+.B iplog
+configuration file.
+
+.SH BUGS
+Report any bugs to odin@numb.org
+
+.SH AUTHOR
+Ryan McCabe <odin@numb.org>
+
+.SH AVAILABILITY
+The primary distribution site for
+.B iplog
+is http://ojnk.sourceforge.net
+
+.SH MIRROR LIST
+.br
+ftp://ojnk.sourceforge.net/pub/ojnk/iplog
+.br
+http://www.numb.org/~odin
+
+
+.SH SEE ALSO
+.BR iplog.conf (5)
+.BR tcpdump (1)
+.BR syslog (3)
+.BR openlog (3)
+.BR pcap (3)
+.BR nmap (8)

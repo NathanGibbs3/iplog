@@ -1,0 +1,550 @@
+.\" $Id: iplog.conf.5,v 1.12 2001/01/02 23:07:44 odin Exp $
+.TH iplog.conf 5 "03 December 2000" "iplog 2.2.3"
+
+.SH NAME
+iplog.conf \- iplog configuration file.
+
+.SH DESCRIPTION
+
+Upon execution and upon being restarted, iplog reads a list of configuration rules from its configuration file.  The default location of this file is
+.B /etc/iplog.conf.
+
+.SH NOTATION
+Throughout this document, required parameters will be denoted by enclosing the parameter in angle brackets <like this>.
+
+Optional parameters will be denoted by enclosing the parameter in square brackets [like this].
+
+The '|' character is used to express exclusive or.  For example [true|false] means you may give "true" or "false", but not both.
+
+.SH COMMENTS
+The '#' character marks the beginning of a comment.  C-style (/**/) comments are accepted, also.
+
+.SH RULE CLASSES
+
+There are nine classes of rules supported in the
+.B iplog
+configuration file.  These rules are:
+.B set rules,
+.B interface rule,
+.B priority rule,
+.B facility rule,
+.B user rule,
+.B group rule,
+.B promisc rule,
+.B logfile rule,
+and
+.B pid-file rule.
+
+
+.SH SET RULE SYNTAX
+
+Set rules allow for boolean program options to be enabled or disabled at runtime.
+
+The syntax for "set" rules is:
+.br
+set <keyword> [true|false]
+
+.SH SET KEYWORDS
+
+.TP
+.B tcp
+Log or ignore TCP traffic.
+
+.TP
+.B udp
+Log or ignore UDP traffic.
+
+.TP
+.B icmp
+Log or ignore ICMP traffic.
+
+.TP
+.B frag
+Enable or disable detection of IP fragment attacks (duplicated and overlapping fragments).
+
+.TP
+.B smurf
+Enable or disable detection of "smurf" attacks.
+
+.TP
+.B bogus
+Enable or disable detection of TCP packets with invalid TCP flags set.  Programs such as nmap and queso may set these flags while trying to perform OS detection.
+
+.TP
+.B log_ip
+Enable or disable logging IP addresses in addition to host names.
+
+.TP
+.B log_dest
+Log the destination address of IP packets that are received.
+
+.TP
+.B stdout
+Enable or disable logging to stdout.  This option is incompatible with the "logfile" keyword.
+
+.TP
+.B no_fork
+Enable or disable running in the foreground.
+
+.TP
+.B verbose
+Enable or disable verbose mode.  In verbose mode, packets with invalid checksums and truncated headers are logged.
+
+.TP
+.B fin_scan
+Enable or disable the detection of TCP FIN scans.
+
+.TP
+.B syn_scan
+Enable or disable the detection of TCP SYN scans.
+
+.TP
+.B udp_scan
+Enable or disable the detection of UDP scans and UDP floods.
+
+.TP
+.B portscan
+Enable or disable the detection of TCP port scans.
+
+.TP
+.B fool_nmap
+Enable or disable a mechanism that attempts to fool programs, such as nmap and queso, that perform remote OS detection.  As a side effect, enabling this option will also cause most of nmap's "stealth" scans to fail.
+
+.TP
+.B xmas_scan
+Enable or disable the detection of TCP XMas scans.
+
+.TP
+.B null_scan
+Enable or disable the detection of TCP null scans.
+
+.TP
+.B get_ident
+Enable or disable fetching IDENT info for connections to local ports that are listening.  This option is only available on Linux.
+
+.TP
+.B dns_cache
+Enable or disable the use of a built-in DNS cache.
+
+.TP
+.B syn_flood
+If this option is enabled,
+.B iplog
+will stop resolving IP addresses (until the flood ends) if a SYN flood is detected.
+
+.TP
+.B ignore_dns
+If this option is enabled, DNS traffic from hosts listed in
+.B /etc/resolv.conf
+will be ignored.
+
+.TP
+.B ping_flood
+Enable or disable detection of ICMP ping floods.
+
+.TP
+.B scans_only
+Enable or disable detecting only scans and floods.
+
+.TP
+.B traceroute
+Enable or disable detection of traceroute.
+
+.TP
+.B udp_resolve
+Enable or disable looking up the host names for the source and destination hosts for UDP traffic.
+
+.TP
+.B tcp_resolve
+Enable or disable looking up the host names for the source and destination hosts for TCP traffic.
+
+.TP
+.B icmp_resolve
+Enable or disable looking up the host names for the source and destination hosts for ICMP traffic.
+
+.TP
+.B disable_resolver
+Enable or disable turning off host name lookups for all traffic.
+
+.SH INTERFACE RULE SYNTAX
+The interface rule is used to define the interfaces on which
+.B iplog
+will listen.
+
+The rule format for the interface rule is:
+.br
+interface <if0,...,ifN>
+.br
+Where ifX is an interface name.
+
+.SH PRIORITY RULE SYNTAX
+The priority rule is used to define the
+.B syslog(3)
+priority (or level) that
+.B iplog
+will use.
+
+The rule format for the priority rule is:
+.br
+priority <syslog_priority>
+.br
+See the
+.B syslog(3)
+for a list of valid priority levels.
+
+.SH FACILITY RULE SYNTAX
+The facility rule is used to define the
+.B syslog(3)
+facility that
+.B iplog
+will use.
+
+The rule format for the facility rule is:
+.br
+facility <syslog_facility>
+.br
+See the
+.B syslog(3)
+for a list of valid syslog facilities.
+
+.SH USER RULE SYNTAX
+The user rule is used to define which user
+.B iplog
+will run as.
+
+The user rule format is:
+.br
+user <UID|username>
+
+.SH GROUP RULE SYNTAX
+The group rule is used to define which group
+.B iplog
+will run with.
+
+The group rule format is:
+.br
+group <GID|group>
+
+.SH LOGFILE RULE SYNTAX
+The logfile rule is used to define a file to which
+.B iplog
+will log its output.
+.B iplog
+can either log to syslog, to stdout or to a logfile, but only one.
+
+The logfile rule format is:
+.br
+logfile <path_to_logfile>
+
+.SH PID-FILE RULE SYNTAX
+The pid-file rule is used to specify the location of
+.B iplog's
+pid file.  The user that
+.B iplog
+will run as should have write access to the directory the specified file is in.
+The location of the pid file defaults to /var/run/iplog.pid.
+.br
+
+This option should be used
+when
+.B iplog
+is set to run as a user that does not have write access to
+/var/run.
+.br
+
+The pid-file rule format is:
+.br
+pid-file <path_to_pid-file>
+
+.SH PROMISC RULE SYNTAX
+The promisc rule enables
+.B iplog
+to operate in promiscuous mode.  In promiscuous mode,
+.B iplog
+examines traffic to all visible hosts on the local network.
+
+The rule format for the promisc rule is:
+.br
+promisc <network0,...,networkN>
+
+.SH FILTER RULE SYNTAX
+
+The rule format for TCP and UDP filters is:
+.br
+<log|ignore> <tcp|udp>
+.br
+from [!]<address>[/<mask>]]
+.br
+[sport [!]<port-start[:[<port-end>]]]
+.br
+[to [!]<address>[/<mask>]]
+.br
+[dport [!]<port-start[:[<port-end>]]>]
+.br
+(All on one line)
+.br
+
+The rule format for ICMP filters is:
+.br
+<log|ignore> icmp
+.br
+[type [!]<type>]
+.br
+[from [!]<address>[/<mask>]]
+.br
+[to [!]<address>[/<mask>]]
+.br
+(All on one line)
+
+.SH FILTER KEYWORDS
+
+The sense of a keyword can be inverted by prefixing its argument with a '!' character.
+
+.TP
+.B log
+Log packets matching the rule.  Either this or
+.B ignore
+must be the first keyword specified in a rule.  The
+.B log
+and
+.B ignore
+keywords cannot be used in the same rule.
+
+.TP
+.B ignore
+Ignore packets matching the rule.  Either this or
+.B log
+must be the first keyword specified in a rule.  The
+.B log
+and
+.B ignore
+keywords cannot be used in the same rule.
+
+.TP
+.B tcp
+Specifies this rule should be applied to TCP traffic.  Exactly one of the
+.B tcp, udp and icmp
+keywords must be used in each rule.
+
+.TP
+.B udp
+Specifies this rule should be applied to UDP traffic.  Exactly one of the
+.B tcp, udp and icmp
+keywords must be used in each rule.
+
+.TP
+.B icmp
+Specifies this rule should be applied to ICMP traffic.  Exactly one of the
+.B tcp, udp and icmp
+keywords must be used in each rule.
+
+.TP
+.B from <Address parameter>
+The
+.B from
+keyword specifies the source address(es) the rule will match.
+
+.TP
+.B to <Address parameter>
+The
+.B to
+keyword specifies the destination address(es) the rule will match.
+
+.TP
+.B sport <Port parameter>
+The
+.B sport
+keyword specifies the source port(s) the rule will match.  This keyword is applicable only to TCP and UDP rules.
+
+.TP
+.B dport <Port parameter>
+The
+.B dport
+keyword specifies the destination port(s) the rule will match.  This keyword is applicable only to TCP and UDP rules.
+
+.TP
+.B type <Type parameter>
+The
+.B type
+keyword specifies an ICMP type.  This keyword is applicable only to ICMP rules.
+
+.SH FILTER PARAMETER SYNTAX
+
+An asterisk character ('*') may be used as a wildcard for any parameter.
+
+.TP
+.B Address parameters
+The syntax for an address parameter is
+.B "[!]<addr>[/<mask>]"
+The
+.B addr
+token specifies the address the rule will match.  This token may be specified in quad-dot notation or as a fully qualified domain name (FQDN).  The
+.B mask
+token is optional, and is used to specify a range of addresses the rule will match.  The
+.B mask
+token may be specified either in quad-dot notation, as a FQDN or in CIDR notation.  If the
+.B mask
+token is present, the
+.B addr
+token will be treated as a network address.
+
+.TP
+.B Port parameters
+The syntax for a port parameter is
+.B "[!]<port-start[:[<port-end>]]>"
+The
+.B port-start
+token specifies the port the rule will match.  This token may be specified as either a decimal number or as a service name (e.g. "telnet").  The optional
+.B port-end
+token is used to define port ranges the rule will match.  The
+.B port-end
+token also may be specified as either a decimal number or a service name.  When the
+.B port-end
+token is present, the
+.B port-start
+token is interpreted as the first port the rule will match.  Suffixing
+.B port-start
+with a ':' but omitting the
+.B port-end
+parameter causes
+.B port-end
+to be implicitly set to 65535 (i.e. all ports greater than or equal to
+.B port-start
+will be matched).  In general, "port1:portN" will match all ports from port1 to portN, inclusive.  "port1:" matches all ports from port1 to 65535, inclusive.
+
+.TP
+.B Type parameters
+Either integers or a string can be used to specify a type parameter.  Obviously, only an integer can be used to describe a type that has no name.  "ICMP_" may precede any of the names.  Legal type parameters follow:
+.RS
+.nf
+.sp
+.ta 3i
+.B NAME	CODE
+ECHOREPLY	0
+n/a	1
+n/a	2
+UNREACH	3
+SOURCEQUENCH	4
+REDIRECT	5
+n/a	6
+n/a	7
+ECHO	8
+ROUTERADVERT	9
+ROUTERSOLICIT	10
+TIMXCEED	11
+PARAMPROB	12
+TSTAMP	13
+TSTAMPREPLY	14
+IREQ	15
+IREQREPLY	16
+MASKREQ	17
+MASKREPLY	18
+.sp
+.fi
+
+.SH GENERAL FILTER SYNTAX
+
+.TP
+.B *
+Case is ignored in all places, except for in a service name (i.e. "telnet").
+
+.TP
+.B *
+All parameters are optional except "log" or "ignore" and "tcp" "udp" and "icmp".  Either log or ignore must be specified for each rule.  Exactly one of the "tcp" "udp" and "icmp" parameters must be specified for each rule.
+
+.TP
+.B *
+The order in which the rules are listed is not significant in regard to "log" or "ignore."  The entries will be reordered such that all "log" statements precede all "ignore" statements.
+
+.SH EXAMPLES
+.B Run as user "nobody."
+.br
+user nobody
+
+.B Run with group "nogroup."
+.br
+group nogroup
+
+.B Log to /var/log/iplog
+.br
+logfile /var/log/iplog
+
+.B Use the syslog(3) facility log_daemon.
+.br
+facility log_daemon
+
+.B Use the syslog(3) priority (level) log_info.
+.br
+priority log_info
+
+.B Log the IP address as well as the hostname of packets.
+.br
+set log_ip true
+
+.B Do not log the destination of packets.
+.br
+set log_dest false
+
+.B Ignore DNS traffic from nameservers in /etc/resolv.conf.
+.br
+set ignore_dns
+
+.B Listen on eth0 and eth1
+.br
+interface eth0,eth1
+
+.B Ignore DNS traffic from nameservers.
+.br
+ignore udp from 192.168.0.1 sport 53
+.br
+ignore udp from 192.168.0.2 sport 53
+.br
+.B NOTE:
+(Using the -d option will add similar rules for all nameservers listed in /etc/resolv.conf).
+.br
+
+.B Log connections with source port ftp-data (20) to ports 1045-1055, inclusive.
+.br
+log tcp dport 1045:1055 sport ftp-data
+.br
+
+.B Ignore ftp-data connections from to ports 1024 and above.
+.br
+ignore tcp dport 1024: sport 20
+.br
+
+.B Ignore WWW connections.
+.br
+ignore tcp dport 80
+.br
+
+.ta T .5i
+.B Ignore ICMP unreach.
+.br
+ignore icmp type unreach
+.br
+.B \tor
+.br
+ignore icmp type 3
+.br
+
+.B Ignore ICMP traffic with any type other than ECHO
+.br
+ignore icmp type !echo
+.br
+
+.B Ignore UDP traffic from the 127.1.2 network
+.br
+ignore udp from 127.1.2/24
+.br
+.B \tor
+.br
+ignore udp from 127.1.2/255.255.255.0
+
+.SH AUTHOR
+Ryan McCabe <odin@numb.org>
+
+.SH SEE ALSO
+.BR iplog (8)
+.BR syslog (3)
+.BR services (5)

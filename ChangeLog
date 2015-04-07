@@ -1,0 +1,374 @@
+Wed Jan 03 14:06:11 EST 2001    Ryan McCabe <odin@numb.org>
+
+    * Released as version 2.2.3.
+
+Mon Jan 01 14:26:57 EST 2001    Ryan McCabe <odin@numb.org>
+
+    * Applied a patch from Conan Ford <conanford@home.com> to
+      enable logging the destination address when doing
+      ident lookups.
+
+Sun Dec 03 18:07:53 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Added a pid-file command-line and config file option.
+
+Sun Dec 03 17:33:25 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Added RPM spec file from Tim Waugh <twaugh@redhat.com>
+
+    * Fixed a problem with parsing C-style comments in the
+      configuration file.
+        - Reported by Brandon Zehm <bzehm@criadvantage.com> months ago.
+          I somehow missed the message until now..
+
+Tue Nov 21 18:16:13 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Released as version 2.2.2.
+
+Tue Nov 07 02:48:40 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Documentation updates.
+
+Tue Nov 07 02:41:00 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Fix the configure script's detection of types ipaddr_t
+      and in_port_t.
+
+    * New scan type: SYN scan.  Detection as per suggestion of
+      spwn@lice.core.com.
+
+Tue Nov 07 01:37:31 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Applied patch from cinic <cinic@twilight.webbernet.net>
+      that allows iplog to run on Solaris 8.
+
+Fri Jul 07 10:51:52 EDT 2000    Ryan McCabe <odin@numb.org>
+
+    * Released as version 2.2.1.
+
+Mon Jul 03 21:01:58 EDT 2000    Ryan McCabe <odin@numb.org>
+
+    * Fixed a bug that caused only one thread to change user or group
+      when -u or -g was specified while the rest continued to run as root.
+        - Reported by jamesb <jamesb@users.sourceforge.net>
+
+Mon Jul 03 16:57:41 EDT 2000    Ryan McCabe <odin@numb.org>
+
+    * Fixed a bug that caused ident lookups to always fail.
+        - Reported by Enrico Scholz <Enrico.Scholz@informatik.tu-chemnitz.de>
+
+Mon Jul 03 14:02:49 EDT 2000    Ryan McCabe <odin@numb.org>
+
+    * Released as version 2.2.0.
+
+    * I have created a SourceForge mailing list for iplog.  See
+      http://sourceforge.net/mail/?group_id=431 if you're interested.
+
+    * Improved the configure script to allow iplog to build on
+      many other platforms.
+
+    * Bug fixes.
+
+    * Documentation updates.
+
+Sun Jun 25 19:57:54 EDT 2000    Ryan McCabe <odin@numb.org>
+
+    * Added support for a configuration file.
+
+Sat Jun 10 21:43:52 EDT 2000    Ryan McCabe <odin@numb.org>
+
+    * Bug fixes.
+
+    * Queue packets to avoid packet loss during during periods of heavy
+      traffic.  This was a problem when host resolution was enabled. 
+
+Mon Jun 05 13:52:21 EDT 2000    Ryan McCabe <odin@numb.org>
+
+    * Use the snprintf function from OpenSSH instead of the one we were
+      using before.
+
+    * Small cleanups.
+
+Sun Jun 04 21:09:23 EDT 2000    Ryan McCabe <odin@numb.org>
+
+    * Documented a bunch of code.
+
+Sat Mar 18 18:04:16 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Be more efficient with memory in the scan/flood handler.
+
+Fri Mar 17 23:56:01 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Applied a patch from Gaël Roualland <rouallan@enserb.fr> that implements
+      logging of ports along with the scan/flood warning.
+
+Thu Mar 16 08:25:54 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Fixed a bug that caused interfaces with dynamic addresses to be
+      reopened incorrectly after going down.
+
+Thu Feb 24 19:02:03 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Fixed a cosmetic race to remove the lockfile when iplog -k is executed.
+        - Reported by zlatko@gmx.at
+
+Sun Feb 20 14:37:33 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Released as version 2.1.1.
+
+Sat Feb 12 12:56:39 EST 2000    Ryan McCabe <odin@numb.org>
+
+    * Allow iplog to monitor loopback devices.
+
+    * Print a warning if any detected interfaces cannot be brought up, and exit
+      if no interfaces can be opened.
+
+Thu Feb 10 15:11:48 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Fixed lockups.
+        - Thanks to Enrico Scholz <Enrico.Scholz@informatik.tu-chemnitz.de>
+          for finding and helping to fix this problem.
+
+    * iplog detects a new class of Xmas scans that were recently discussed
+      on Bugtraq.
+
+    * New option: -m or --scans-only.  This option will cause iplog to log
+      only scans and floods.
+        - Suggestion from Ben Vaughn <bvaughn@pns.net>
+
+    * New option: -V or --verbose.  iplog will log packets with bad checksums
+      and short header lengths when this flag is given.
+
+    * New option: -D or --log-dest.  iplog will log the destination host
+      of packets when this option is given.
+
+    * Applied a patch from
+      Enrico Scholz <Enrico.Scholz@informatik.tu-chemnitz.de> to enable
+      certain build options.
+
+    * A bunch of other bugfixes and enhancements.
+
+Wed Feb 02 01:58:32 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Applied patch from Enrico Scholz <Enrico.Scholz@informatik.tu-chemnitz.de>
+      to fix a problem with the ident code.
+
+    * iplog will now detect when interfaces go down and re-open them
+      when they come back up, if possible.
+
+Mon Jan 17 21:07:54 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Released as version 2.1.0.
+
+Mon Jan 17 21:03:07 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Print a warning when host resolution is enabled while running in
+      promiscuous mode.
+
+    * Final cleanups before release as 2.1.0.
+
+Sun Jan 16 14:24:03 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Documentation updates.
+
+Sun Jan 16 00:01:30 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Fixed the scan code to better deal with a full hash table.
+
+Fri Jan 14 13:46:23 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Allow for more than one network to be specified with -a
+
+Fri Jan 14 03:26:52 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Updated the manual pages.
+
+Fri Jan 14 00:51:01 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a descriptor leak that occurred when ident lookups were enabled.
+        - Reported by Jim B <jimb@alongtheway.com>
+
+    * Fixed a bug that caused packets with a bad header to be sent out when
+      trying to fool nmap's -O option.
+
+Sun Jan 09 17:55:29 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a bug in iplog_udp.c
+        - Reported by "Craig R. Watkins" <crw@transcend.com>
+
+Sat Jan 08 14:20:11 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Fixed the scan code to work in promiscuous mode.  This needs testing.
+
+Thu Jan 06 03:14:40 EST 2000    Ryan McCabe    <odin@numb.org>
+
+    * Did most of the work to make iplog able to watch a whole network.
+      The scan code still needs to be fixed.
+
+    * Several small bug fixes.
+
+    * Code cleanups.
+
+Tue Nov 30 13:49:12 EST 1999    Ryan McCabe    <odin@numb.org>
+
+    * Created an iplog.rules.5 manual page.
+
+Sat Nov 20 10:43:25 EST 1999    Ryan McCabe    <odin@numb.org>
+
+    * Added the --log-ip option to the "iplog --help" output.  
+      Thomas Zajic <thomas.zajic@teleweb.at> noticed this was missing.
+
+Thu Nov 18 02:54:04 EST 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a bug that resulted in 15 character length IPs being truncated to
+      14 characters.  Oops.
+
+Sat Nov 13 10:48:58 EST 1999    Ryan McCabe    <odin@numb.org>
+
+    * Applied a patch from Piero Serini <piero@esi.it> to fix a compilation
+      problem on Solaris 2.5.1.
+
+    * Fixed a bug in the pcap.h detection routine in the configure script.
+
+    * Fixed a problem with the -w option.
+
+Sun Nov 07 16:35:14 EST 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a bug that caused DNS cache entries to be expired much too quickly.
+
+Thu Nov 04 19:43:46 EST 1999    Ryan McCabe    <odin@numb.org>
+
+    * Re-wrote dns cache and scan table locking.
+
+    * Fixed a bug that caused a garbled message to be logged upon scan
+      mode expiring.
+
+Sun Oct 31 10:43:53 EST 1999    Ryan McCabe    <odin@numb.org>
+
+    * New command line switch: --log-ip (-w), which causes iplog to log
+      the IP address along with the hostname when looking up hosts.
+        - Suggestion from Frank v Waveren <fvw@var.cx>
+
+Sat Oct 30 19:43:19 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a bug in the filter rule parser code that caused iplog to crash
+      when rule keywords were omitted.
+        - Reported by Adrian Woizik <morrow@DreamWorld.GHB.FH-Furtwangen.DE>
+
+Thu Oct 21 17:35:39 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Applied patch from Vitezslav Samel <vsamel@seznam.cz> to fix
+      CIDR notation parsing.
+
+Mon Oct 18 02:52:39 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a compilation problem on Solaris.
+        - Reported by job bogan <job@piquin.uchicago.edu>
+
+Sun Oct 17 12:31:12 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Two new command line switches: --facility and --priority, which set the
+      syslog facility and priority, respectively.
+
+    * Use daemon.notice as the default facility and priority.  Apparently
+      daemon.info was being dropped by the default syslog configuration on
+      FreeBSD (at least).
+
+    * Documentation updates.
+
+Sat Oct 16 00:28:05 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Ported to Solaris (only tested with Solaris 7 on a Sparc).
+        - Thanks to brokebit <brokebit@brokenbytes.org> for providing access.
+
+Fri Oct 08 18:00:14 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed more bugs in the rule parsing code.
+        - Reported by Frank v Waveren <fvw@var.cx>
+
+    * Fixed added the -z option to the iplog --help output.
+    * Updated the "example-iplog.rules" file.
+        - Problems reported by Jim Conner <jimc@wi.net>
+
+Thu Oct 07 00:53:48 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a bug that caused the -d option to be ignored when iplog
+      is restarted.
+        - Reported by Owada Jan <owada@polbox.com>
+
+Fri Oct 01 13:44:28 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a bug in the filter code that caused address specifications
+      such as 1.2.3/24 not to work.
+        - Reported by Craig Kelley <ink@inconnu.isu.edu>
+
+Tue Sep 28 17:12:35 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a problem with the -d option that would cause iplog to crash
+      on startup.
+        - Reported by Pekka Savola <Pekka.Savola@netcore.fi>
+
+    * Fixed a compilation problem on non-Linux platforms.
+        - Reported by ermirza erekose <erekose@morgoth.celcom.com.my>
+
+Mon Sep 27 18:55:41 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a problem with the openlog(3) call.
+
+Thu Sep 16 15:03:03 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Filter rules that have hosts with multiple IPs will behave as expected
+      now (iplog will check every IP now, not just the first).
+
+Mon Sep 13 22:25:19 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Added patch from Enrico Scholz <Enrico.Scholz@informatik.tu-chemnitz.de>
+      to fix the pcap header location problem for good (hopefully).
+
+Mon Sep 13 14:42:31 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed more problems with the filter.
+        - Reported by Pekka Savola <pekkas@netcore.fi>
+
+Sun Sep 12 23:02:35 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Added example filter rules that use address masks.
+    * Fixed filter bug.
+        - Reported by Brian Marsden <marsden@bioch.ox.ac.uk>
+    * Fixed problem that caused everything to be logged to stdout when
+      --logfile (-l) was specified.
+        - Reported by Owada Jan <owada@polbox.com>
+
+Fri Sep 03 18:57:20 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Really fixed the problem with the location of pcap headers with
+      redhat contrib and stampede libpcap rpms.
+        - Reported by Enrico Scholz <Enrico.Scholz@informatik.tu-chemnitz.de>
+
+    * Two new command line options: -o and -L which cause iplog to run in
+      the foreground and log to stdout, respectively.
+
+Wed Aug 25 02:16:27 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Added a new option: -z, --fool-nmap.  Attempt to fool OS
+      detection mechanisms by replying to the probes with junk.
+
+Tue Aug 24 01:26:27 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a problem finding pcap.h on Linux Redhat and Mandrake systems.
+        - Reported by Jim Hazen <jim@icess.ucsb.edu>
+
+Mon Aug 23 10:09:13 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * Fixed a problem with restarting iplog when -u is given.
+        - Reported by Kyle Christensen <mute@snip.net> and
+          Steffen Zahn <zahn@berlin.snafu.de>
+
+    * Fixed more problems with restarting iplog..
+
+    * Added further explanation to the "example-iplog.rules" file.
+
+Sun Aug 22 21:07:40 EDT 1999    Ryan McCabe    <odin@numb.org>
+
+    * First alpha release.
+

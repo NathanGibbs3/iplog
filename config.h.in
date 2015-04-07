@@ -1,0 +1,84 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+
+/* Define if you have the ANSI C header files.  */
+#undef STDC_HEADERS
+
+#undef HAVE_SOCKADDR_SA_LEN
+#undef HAVE_GETHOSTBYADDR_R
+#undef HAVE_GETPROTOBYNUMBER_R
+#undef HAVE_GETSERVBYPORT_R
+#undef HAVE_PTHREAD_CANCEL
+#undef HAVE_GETSERVBYPORT_RSIX
+#undef HAVE_GETSERVBYPORT_RFIVE
+#undef HAVE_GETSERVBYPORT_RFOUR
+#undef HAVE_GETHOSTBYADDR_REIGHT
+#undef HAVE_GETHOSTBYADDR_RSEVEN
+#undef HAVE_GETHOSTBYADDR_RFIVE
+#undef HAVE_GETPROTOBYNUMBER_RFIVE
+#undef HAVE_GETPROTOBYNUMBER_RFOUR
+#undef HAVE_GETPROTOBYNUMBER_RTHREE
+#undef HAVE_IPADDR_T
+#undef HAVE_IN_PORT_T
+#undef PACKAGE
+#undef VERSION
+#undef u_int32_t
+#undef u_int16_t
+#undef u_int8_t
+#undef uint32_t
+#undef uint16_t
+#undef uint8_t
+
+/* Define if you have the dprintf function.  */
+#undef HAVE_DPRINTF
+
+/* Define if you have the gethostbyaddr_r function.  */
+#undef HAVE_GETHOSTBYADDR_R
+
+/* Define if you have the getopt_long function.  */
+#undef HAVE_GETOPT_LONG
+
+/* Define if you have the getpagesize function.  */
+#undef HAVE_GETPAGESIZE
+
+/* Define if you have the getprotobynumber_r function.  */
+#undef HAVE_GETPROTOBYNUMBER_R
+
+/* Define if you have the getservbyport_r function.  */
+#undef HAVE_GETSERVBYPORT_R
+
+/* Define if you have the inet_aton function.  */
+#undef HAVE_INET_ATON
+
+/* Define if you have the localtime_r function.  */
+#undef HAVE_LOCALTIME_R
+
+/* Define if you have the pthread_cancel function.  */
+#undef HAVE_PTHREAD_CANCEL
+
+/* Define if you have the pthread_create function.  */
+#undef HAVE_PTHREAD_CREATE
+
+/* Define if you have the snprintf function.  */
+#undef HAVE_SNPRINTF
+
+/* Define if you have the vasprintf function.  */
+#undef HAVE_VASPRINTF
+
+/* Define if you have the vsnprintf function.  */
+#undef HAVE_VSNPRINTF
+
+/* Define if you have the <paths.h> header file.  */
+#undef HAVE_PATHS_H
+
+/* Define if you have the <sys/sockio.h> header file.  */
+#undef HAVE_SYS_SOCKIO_H
+
+/* Name of package */
+#undef PACKAGE
+
+/* Version number of package */
+#undef VERSION
+
+/* define if your compiler has __attribute__ */
+#undef HAVE___ATTRIBUTE__
+

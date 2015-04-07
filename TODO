@@ -1,0 +1,36 @@
+Known Problems
+--------------
+
+    - I'm still unable to reproduce iplog going nuts and eating 100% of the
+      CPU time.  I can't see anything that'd cause this to happen, either.
+      If this is happening to you, it'd be very helpful if you could send
+      me tcpdump output (tcpdump -w) of the traffic that triggers it.  My
+      only guess as to why it happens is bad interaction between the threads
+      and libpcap.  I'm using version 0.5.2 of libpcap on Linux 2.4 without
+      problems, for what it's worth.  If you do have this problem, could
+      you try upgrading libpcap to version 0.5.2 and see if it goes away.
+
+    - To people who can't get iplog to log anything:
+      Can you try commenting out line 41 of iplog.c and seeing if that makes iplog
+      produce logs.  If it does, what percentage of CPU time does ps or top show
+      iplog consuming.  If deleting that line helps you at all, I'd be interested
+      in hearing about it.  Could you send me email with your operating system
+      and OS version and details about what happened when you removed that line.
+
+    - iplog triggers bugs in OpenBSD 2.5's (and likely anything prior to 2.5)
+      libc_r, and usually dies because of these bugs shortly after starting up.
+        * The problems (above) I experienced with OpenBSD 2.5 seem to be fixed
+          in OpenBSD 2.6 (I tried the Oct. 14, 1999 snapshot and the 2.6
+          release).
+
+Other Stuff
+-----------
+
+    - I want to port iplog to more platforms.  If you'd like to do this
+      or provide access so I can do this, I'd be awfully grateful.
+
+
+
+
+
+$Id: TODO,v 1.13 2001/01/01 19:42:54 odin Exp $

@@ -1,0 +1,404 @@
+AC_INIT(Makefile.in)
+
+PACKAGE=iplog
+
+AM_INIT_AUTOMAKE($PACKAGE, 2.2.3)
+AM_MAINTAINER_MODE
+AM_CONFIG_HEADER(config.h)
+
+AC_PROG_MAKE_SET
+AC_ARG_PROGRAM
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_CANONICAL_HOST
+
+dnl
+dnl Test for __attribute__
+dnl
+
+AC_DEFUN(AC_C___ATTRIBUTE__, [
+AC_MSG_CHECKING(for __attribute__)
+AC_CACHE_VAL(ac_cv___attribute__, [
+AC_TRY_COMPILE([
+#include <stdlib.h>],
+[static void foo(void) __attribute__ ((noreturn));
+static void
+foo(void) {
+	exit(1);
+}],
+ac_cv___attribute__=yes,
+ac_cv___attribute__=no)])
+if test "$ac_cv___attribute__" = "yes"; then
+	AC_DEFINE(HAVE___ATTRIBUTE__, 1, [define if your compiler has __attribute__])
+fi
+AC_MSG_RESULT($ac_cv___attribute__)
+])
+
+AC_C___ATTRIBUTE__
+
+AC_ARG_WITH(libpcap,
+[  --with-libpcap=DIR              Specify location of libpcap],[
+	CPPFLAGS="$CPPFLAGS -I$withval"
+	LDFLAGS="$LDFLAGS -L$withval"
+])
+
+AC_ARG_WITH(libpcap-libs,
+[  --with-libpcap-libs=DIR         Specify location of the libpcap libraries],[
+	LDFLAGS="$LDFLAGS -L$withval"
+])
+
+AC_ARG_WITH(libpcap-includes,
+[  --with-libpcap-includes=DIR     Specify location of libpcap header files],[
+	CPPFLAGS="$CPPFLAGS -I$withval"
+])
+
+iplog_debug=no
+AC_ARG_ENABLE(debug,
+[  --enable-debug                  Enable debugging messages.],
+    [if test $enableval = yes; then iplog_debug=yes; fi])
+if test $iplog_debug = yes; then
+	CFLAGS="$CFLAGS -DDEBUG"
+fi
+
+AC_CHECK_FUNCS(dprintf vasprintf getopt_long localtime_r inet_aton vsnprintf snprintf getpagesize)
+
+AC_CHECK_HEADERS(paths.h sys/sockio.h)
+
+AC_CHECK_TYPE(u_int32_t, uint32_t)
+if test $ac_cv_type_u_int32_t = no; then
+	AC_CHECK_TYPE(uint32_t, unsigned int)
+fi
+
+AC_CHECK_TYPE(u_int16_t, uint16_t)
+if test $ac_cv_type_u_int16_t = no; then
+	AC_CHECK_TYPE(uint16_t, unsigned short)
+fi
+
+AC_CHECK_TYPE(u_int8_t, uint8_t)
+if test $ac_cv_type_u_int8_t = no; then
+	AC_CHECK_TYPE(uint8_t, unsigned char)
+fi
+
+AC_MSG_CHECKING(for ipaddr_t)
+AC_TRY_COMPILE([#include <unistd.h>
+				#include <sys/types.h>
+				#include <sys/socket.h>
+				#include <netdb.h>
+				#include <netinet/in_systm.h>
+				#include <netinet/in.h>],
+                        [sizeof(ipaddr_t);],
+			[AC_DEFINE(HAVE_IPADDR_T)
+			AC_MSG_RESULT(yes)],
+            [AC_MSG_RESULT(no)])
+
+AC_MSG_CHECKING(for in_port_t)
+AC_TRY_COMPILE([#include <unistd.h>
+				#include <sys/types.h>
+				#include <sys/socket.h>
+				#include <netdb.h>
+				#include <netinet/in_systm.h>
+				#include <netinet/in.h>],
+                        [sizeof(in_port_t);],
+			[AC_DEFINE(HAVE_IN_PORT_T)
+			AC_MSG_RESULT(yes)],
+            [AC_MSG_RESULT(no)])
+
+dnl from libpcap
+AC_DEFUN(AC_SOCKADDR_SA_LEN,
+	[AC_MSG_CHECKING(if sockaddr struct has sa_len member)
+	AC_CACHE_VAL(ac_cv_lbl_sockaddr_has_sa_len,
+	AC_TRY_COMPILE([
+#	include <sys/types.h>
+#	include <sys/socket.h>],
+	[u_int i = sizeof(((struct sockaddr *)0)->sa_len)],
+	ac_cv_lbl_sockaddr_has_sa_len=yes,
+	ac_cv_lbl_sockaddr_has_sa_len=no))
+	AC_MSG_RESULT($ac_cv_lbl_sockaddr_has_sa_len)
+	if test $ac_cv_lbl_sockaddr_has_sa_len = yes ; then
+		AC_DEFINE(HAVE_SOCKADDR_SA_LEN)
+	fi])
+
+dnl from gnome
+AC_DEFUN([PTHREAD_CHECK],[
+	PTHREAD_LIB=no
+	AC_CHECK_LIB(pthread, pthread_create, PTHREAD_LIB="-lpthread",
+		[AC_CHECK_LIB(pthreads, pthread_create, PTHREAD_LIB="-lpthreads",
+			[AC_CHECK_LIB(c_r, pthread_create, PTHREAD_LIB="-lc_r",
+			[AC_CHECK_FUNCS(pthread_create, PTHREAD_LIB="-lc")]
+			)]
+		)]
+	)
+	AC_PROVIDE([PTHREAD_CHECK])
+])
+
+CFLAGS="$CFLAGS -D_REENTRANT"
+
+PTHREAD_CHECK
+
+if test $PTHREAD_LIB = "no" ; then
+	echo "Error: pthreads are required to build this package."
+	echo "Error: See the README file."
+	exit 1
+fi
+
+pth_cancel=""
+if test "$PTHREAD_LIB" = "-lc" ; then
+	AC_CHECK_FUNCS(pthread_cancel, pth_cancel="yes")
+else
+	PJG=`echo $PTHREAD_LIB | sed 's/^-l//g'`
+	AC_CHECK_LIB($PJG, pthread_cancel, pth_cancel="yes")
+fi
+
+if test -n "$pth_cancel" ; then
+	AC_DEFINE(HAVE_PTHREAD_CANCEL)
+fi
+
+
+SLIB=$PJG
+
+renf=no
+AC_CHECK_FUNCS(getservbyport_r, renf=yes)
+if test $renf = "no" ; then
+	for i in $PJG $SLIB "socket" "nsl" ; do
+		AC_CHECK_LIB($i, getservbyport_r, renf=yes)
+		if test $renf = "yes" ; then
+			AC_DEFINE(HAVE_GETSERVBYPORT_R)
+			if test $SLIB != $i ; then
+				SLIB=$i
+				SOCKLIB="$SOCKLIB -l$i"
+			fi
+			break
+		fi
+	done
+fi
+
+if test $renf = "yes" ; then
+	OLDLIBS=$LIBS
+	LIBS="$LIBS $SOCKLIB"
+	AC_MSG_CHECKING(whether getservbyport_r takes 6 args)
+	AC_TRY_COMPILE([#include <unistd.h>
+					#include <sys/types.h>
+					#include <netdb.h>],
+					[getservbyport_r(0, NULL, NULL, NULL, 0, NULL);],
+					[AC_DEFINE(HAVE_GETSERVBYPORT_RSIX)
+					AC_MSG_RESULT(yes)],
+					[renf=no
+					AC_MSG_RESULT(no)])
+
+	if test $renf = "no" ; then
+		renf=yes
+		AC_MSG_CHECKING(whether getservbyport_r takes 5 args)
+		AC_TRY_COMPILE([#include <unistd.h>
+						#include <sys/types.h>
+						#include <netdb.h>],
+						[getservbyport_r(0, NULL, NULL, NULL, 0);],
+						[AC_DEFINE(HAVE_GETSERVBYPORT_RFIVE)
+						AC_MSG_RESULT(yes)],
+						[renf=no
+						AC_MSG_RESULT(no)])
+	fi
+
+	if test $renf = "no" ; then
+		renf=yes
+		AC_MSG_CHECKING(whether getservbyport_r takes 4 args)
+		AC_TRY_COMPILE([#include <unistd.h>
+						#include <sys/types.h>
+						#include <netdb.h>],
+						[getservbyport_r(0, NULL, NULL, NULL);],
+						[AC_DEFINE(HAVE_GETSERVBYPORT_RFOUR)
+						AC_MSG_RESULT(yes)],
+						[renf=no
+						AC_MSG_RESULT(no)])
+	fi
+
+	if test $renf = "no" ; then
+		echo "Error: Your system is weird.  Please mail odin@numb.org the"
+		echo "function prototype for getservbyport_r"
+		exit 1
+	fi
+
+	LIBS=$OLDLIBS
+fi
+
+renf=no
+AC_CHECK_FUNCS(gethostbyaddr_r, renf=yes)
+if test $renf = "no" ; then
+	for i in $SLIB $PJG "socket" "nsl" ; do
+		AC_CHECK_LIB($i, gethostbyaddr_r, renf=yes)
+		if test $renf = "yes" ; then
+			AC_DEFINE(HAVE_GETHOSTBYADDR_R)
+			if test $SLIB != $i ; then
+				SLIB=$i
+				SOCKLIB="$SOCKLIB -l$i"
+			fi
+			break
+		fi
+	done
+fi
+
+if test $renf = "yes" ; then
+	OLDLIBS=$LIBS
+	LIBS="$LIBS $SOCKLIB"
+	AC_MSG_CHECKING(whether gethostbyaddr_r takes 8 args)
+	AC_TRY_COMPILE([#include <unistd.h>
+					#include <sys/types.h>
+					#include <netdb.h>],
+					[gethostbyaddr_r(NULL, 0, 0, NULL, NULL, 0, NULL, NULL);],
+					[AC_DEFINE(HAVE_GETHOSTBYADDR_REIGHT)
+					AC_MSG_RESULT(yes)],
+					[renf=no
+					AC_MSG_RESULT(no)])
+
+	if test $renf = "no" ; then
+		renf=yes
+		AC_MSG_CHECKING(whether gethostbyaddr_r takes 7 args)
+		AC_TRY_COMPILE([#include <unistd.h>
+						#include <sys/types.h>
+						#include <netdb.h>],
+						[gethostbyaddr_r(NULL, 0, 0, NULL, NULL, 0, NULL);],
+						[AC_DEFINE(HAVE_GETHOSTBYADDR_RSEVEN)
+						AC_MSG_RESULT(yes)],
+						[renf=no
+						AC_MSG_RESULT(no)])
+	fi
+
+	if test $renf = "no" ; then
+		renf=yes
+		AC_MSG_CHECKING(whether gethostbyaddr_r takes 5 args)
+		AC_TRY_COMPILE([#include <unistd.h>
+						#include <sys/types.h>
+						#include <netdb.h>],
+						[gethostbyaddr_r(NULL, 0, 0, NULL, NULL);],
+						[AC_DEFINE(HAVE_GETHOSTBYADDR_RFIVE)
+						AC_MSG_RESULT(yes)],
+						[renf=no
+						AC_MSG_RESULT(no)])
+	fi
+
+	if test $renf = "no" ; then
+		echo "Error: Your system is weird.  Please mail odin@numb.org the"
+		echo "function prototype for getprotobynumber_r"
+		exit 1
+	fi
+
+	LIBS=$OLDLIBS
+fi
+
+renf=no
+AC_CHECK_FUNCS(getprotobynumber_r, renf=yes)
+if test $renf = "no" ; then
+	for i in $SLIB $PJG "socket" "nsl"; do
+		AC_CHECK_LIB($i, getprotobynumber_r, renf=yes)
+		if test $renf = "yes"; then
+			AC_DEFINE(HAVE_GETPROTOBYNUMBER_R)
+			if test $SLIB != $i ; then
+				SLIB=$i
+				SOCKLIB="$SOCKLIB -l$i"
+			fi
+			break
+		fi
+	done
+fi
+
+if test $renf = "yes" ; then
+	OLDLIBS=$LIBS
+	LIBS="$LIBS $SOCKLIB"
+	AC_MSG_CHECKING(whether getprotobynumber_r takes 5 args)
+	AC_TRY_COMPILE([#include <unistd.h>
+					#include <sys/types.h>
+					#include <netdb.h>],
+					[getprotobynumber_r(0, NULL, NULL, 0, NULL);],
+					[AC_DEFINE(HAVE_GETPROTOBYNUMBER_RFIVE)
+					AC_MSG_RESULT(yes)],
+					[renf=no
+					AC_MSG_RESULT(no)])
+
+	if test $renf = "no" ; then
+		renf=yes
+		AC_MSG_CHECKING(whether getprotobynumber_r takes 4 args)
+		AC_TRY_COMPILE([#include <unistd.h>
+						#include <sys/types.h>
+						#include <netdb.h>],
+						[getprotobynumber_r(0, NULL, NULL, 0);],
+						[AC_DEFINE(HAVE_GETPROTOBYNUMBER_RFOUR)
+						AC_MSG_RESULT(yes)],
+						[renf=no
+						AC_MSG_RESULT(no)])
+	fi
+
+	if test $renf = "no" ; then
+		renf=yes
+		AC_MSG_CHECKING(whether getprotobynumber_r takes 3 args)
+		AC_TRY_COMPILE([#include <unistd.h>
+						#include <sys/types.h>
+						#include <netdb.h>],
+						[getprotobynumber_r(0, NULL, NULL);],
+						[AC_DEFINE(HAVE_GETPROTOBYNUMBER_RTHREE)
+						AC_MSG_RESULT(yes)],
+						[renf=no
+						AC_MSG_RESULT(no)])
+	fi
+
+	if test $renf = "no" ; then
+		echo "Error: Your system is weird.  Please mail odin@numb.org the"
+		echo "function prototype for getprotobynumber_r"
+		exit 1
+	fi
+
+	LIBS=$OLDLIBS
+fi
+
+
+if test "$PTHREAD_LIB" = "-lc_r" ; then
+	PTHREAD_LIB=""
+	CFLAGS="$CFLAGS -pthread"
+fi
+
+if test "$PTHREAD_LIB" = "-lc" ; then
+	PTHREAD_LIB=""
+fi
+
+if test "$PTHREAD_LIB" = "-lpthreads" ; then
+	PTHREAD_LIB="-lpthread"
+fi
+
+PCAP_LIB=no
+AC_CHECK_LIB(pcap, pcap_open_live, PCAP_LIB="-lpcap")
+if test $PCAP_LIB = "no" ; then
+	echo "Error: libpcap is required to build this package."
+	echo "Error: See the README file."
+	exit 1
+fi
+
+AC_SOCKADDR_SA_LEN
+
+LIBS="$LIBS $PTHREAD_LIB $PCAP_LIB $SOCKLIB"
+
+pcap_h_found=no
+AC_CHECK_HEADER(pcap.h, [pcap_h_found=yes])
+
+if test $pcap_h_found = no; then
+	old_cpp_flags=$CPPFLAGS
+	CPPFLAGS="$old_cpp_flags -I/usr/include/pcap"
+	AC_CHECK_HEADER(pcap/pcap.h, [pcap_h_found=yes])
+
+	if test $pcap_h_found = "no" ; then
+		CPPFLAGS="$old_cpp_flags -I/usr/local/include -I/usr/local/include/pcap"
+		AC_CHECK_HEADER(pcap.h, [pcap_h_found=yes])
+		if test $pcap_h_found = "no" ; then
+			echo "Error: You seem to be missing the libpcap header files."
+			echo "Error: See the README file."
+			exit 1
+		fi
+	fi
+fi
+
+AC_SUBST(LIBS)
+AC_SUBST(CPPFLAGS)
+AC_OUTPUT(Makefile src/Makefile src/gnu/Makefile)
+
+echo
+echo "Please remember to use GNU make to build iplog."
+echo "iplog will not build with BSD (or any other) make."
+echo "You can get GNU make from any GNU mirror in /pub/gnu/make"
+echo

@@ -1,0 +1,51 @@
+CHANGES IN IPLOG 2.2.3
+----------------------
+* Bug fixes.
+* New command-line and config file option: pid-file (See iplog.conf(5) for details).
+
+CHANGES IN IPLOG 2.2.2
+----------------------
+
+* Addition of a new class of scan: TCP SYN scan.
+* Fixes for building on Solaris 8.
+
+
+CHANGES IN IPLOG 2.2.1
+----------------------
+
+* Bug fixes for problems with switching users and getting IDENT info.
+
+
+CHANGES IN IPLOG 2.2.0
+----------------------
+
+* You may have noticed that iplog has a new WWW page.  Thanks to
+  Cody Brownstein <cbrownst@mediaone.net> for designing it.
+* Compiles on lots more platforms.  Whether it actually works is another
+  matter; I didn't have root access, so I couldn't test.  Please mail me
+  if iplog is running for you on a platform other than BSD and Linux.
+* New config file.  See iplog.conf(5)
+  NOTE: THE FORMAT OF THE FILTER RULES HAS CHANGED.  YOU'VE BEEN WARNED.
+        SEE iplog.conf(5) FOR DETAILS.
+* Handles high-traffic situations more reliably.
+* Lots of bug fixes and improvements.
+* I have created a SourceForge mailing list for iplog.  See
+  http://sourceforge.net/mail/?group_id=431 if you're interested.
+
+
+CHANGES IN IPLOG 2.1.1
+----------------------
+
+* Cured lockups that happened when iplog was monitoring two or more interfaces.
+* iplog can detect when interfaces go down and try to re-open them when they
+  come back up.
+* iplog detects a new class of Xmas scans that were recently discussed on
+  Bugtraq.
+* iplog can listen on loopback devices.
+
+
+CHANGES IN IPLOG 2.1.0
+----------------------
+
+* Added the ability to run in promiscuous mode and monitor a whole network.
+* Lots of bug fixes.
