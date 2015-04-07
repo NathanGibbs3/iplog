@@ -60,8 +60,8 @@ extern u_int32_t flags;
 #define ANY_SCAN \
 (PORTSCAN | NULL_SCAN | FIN_SCAN | XMAS_SCAN | UDP_SCAN | PING_FLOOD | SMURF)
 
-#define AUTHORS "Ryan McCabe <odin@numb.org> "
-#define WEBPAGE "http://ojnk.sourceforge.net"
+#define AUTHORS "Ryan McCabe <odin@numb.org> & Nathan Gibbs (nathan@cmpublishers.com)"
+#define WEBPAGE "http://www.cmpublishers.com/oss"
 
 int get_facility(const u_char *new_facility);
 int get_priority(const u_char *new_priority);

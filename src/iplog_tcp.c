@@ -144,9 +144,7 @@ int tcp_parser(const struct ip *ip) {
 
 		ret = sendto(raw_sock, (char *) xip,
 				sizeof(struct ip) + sizeof(struct tcphdr), 0,
-#if !defined(__GLIBC__) || (__GLIBC__ < 2)
 				(struct sockaddr *)
-#endif
 				&fn_sin,
 				sizeof(struct sockaddr_in));
 

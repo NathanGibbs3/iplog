@@ -29,8 +29,5 @@ Other Stuff
     - I want to port iplog to more platforms.  If you'd like to do this
       or provide access so I can do this, I'd be awfully grateful.
 
-
-
-
-
-$Id: TODO,v 1.13 2001/01/01 19:42:54 odin Exp $
+Nathan's TODO
+	1. Clean up the format of the log messages

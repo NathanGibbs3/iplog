@@ -1,3 +1,12 @@
+06-17-2013
+	Released as version 2.2.4
+	Some code tweaks to get it to compile on debian Wheezy.
+	Added debian startup script
+
+05-16-2013
+	New project lead.
+	Nathan Gibbs nathan@cmpublishers.com
+
 Wed Jan 03 14:06:11 EST 2001    Ryan McCabe <odin@numb.org>
 
     * Released as version 2.2.3.
