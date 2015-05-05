@@ -1,2 +1,2 @@
 # iplog
-The continuation of Ryan McCabe's iplog project. A TCP/IP traffic logger. for linux systems.
+The continuation of @ryan-mccabe iplog project. A TCP/IP traffic logger. for linux systems.
